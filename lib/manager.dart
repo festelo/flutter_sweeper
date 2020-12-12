@@ -21,6 +21,7 @@ class CellState {
 
   CellState operator &(CellState o) => CellState(val & o.val);
   CellState operator |(CellState o) => CellState(val | o.val);
+  CellState operator ~() => CellState(~val);
 
   bool operator ==(o) {
     if (o is int) return val == o;
@@ -105,5 +106,15 @@ class FieldManager {
       _openOk(location);
       return true;
     }
+  }
+
+  void flag(Location location) {
+    final currentState = getState(location);
+    _states[location] = currentState | CellState.flag;
+  }
+
+  void unflag(Location location) {
+    final currentState = getState(location);
+    _states[location] = currentState & ~CellState.flag;
   }
 }

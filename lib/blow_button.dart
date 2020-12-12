@@ -5,11 +5,13 @@ import 'manager.dart';
 class BlowButton extends StatelessWidget {
   final CellState state;
   final VoidCallback onTap;
+  final VoidCallback onFlag;
 
   const BlowButton({
     Key? key,
     required this.state,
     required this.onTap,
+    required this.onFlag,
   }) : super(key: key);
 
   static final fillColor = <CellState, Color>{
@@ -53,12 +55,16 @@ class BlowButton extends StatelessWidget {
         child: InkWell(
           child: Center(
             child: FaIcon(
-              state.hasFlag(CellState.bomb) && state.hasFlag(CellState.open)
-                  ? FontAwesomeIcons.bomb
-                  : FontAwesomeIcons.question,
+              () {
+                if (state.hasFlag(CellState.bomb) &&
+                    state.hasFlag(CellState.open)) return FontAwesomeIcons.bomb;
+                if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
+                return FontAwesomeIcons.question;
+              }(),
               color: getFontColor(),
             ),
           ),
+          onLongPress: onFlag,
           onTap: onTap,
         ),
       ),

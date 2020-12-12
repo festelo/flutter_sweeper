@@ -41,6 +41,21 @@ class BlowFieldState extends State<BlowField> {
     });
   }
 
+  void onFlag(Location location) {
+    if (field == null) initBombs(except: location);
+    final currentState = field!.getState(location);
+    if (currentState.hasFlag(CellState.open)) return;
+    if (currentState.hasFlag(CellState.flag)) {
+      setState(() {
+        field!.unflag(location);
+      });
+    } else {
+      setState(() {
+        field!.flag(location);
+      });
+    }
+  }
+
   void reset() {
     setState(() => field = null);
   }
@@ -50,7 +65,7 @@ class BlowFieldState extends State<BlowField> {
     final random = Random();
     for (var i = 0; i < widget.fieldHeight; i++) {
       for (var j = 0; j < widget.fieldWidth; j++) {
-        if (random.nextInt(100) < 40) bombs.add(Location(j, i));
+        if (random.nextInt(100) < 30) bombs.add(Location(j, i));
       }
     }
     return bombs;
@@ -59,7 +74,15 @@ class BlowFieldState extends State<BlowField> {
   void initBombs({Location? except}) {
     Map<Location, CellState> fieldStates = {};
     final bombs = generateBombs();
-    if (except != null) bombs.remove(except);
+    if (except != null) {
+      for (var i = -1; i < 2; i++) {
+        final x = except.x + i;
+        for (var j = -1; j < 2; j++) {
+          final y = except.y + j;
+          bombs.remove(Location(x, y));
+        }
+      }
+    }
     for (final b in bombs) {
       fieldStates[b] = CellState.bomb;
     }
@@ -99,6 +122,7 @@ class BlowFieldState extends State<BlowField> {
                       return BlowButton(
                         state: state,
                         onTap: () => onTap(location),
+                        onFlag: () => onFlag(location),
                       );
                     }(),
                   ),
