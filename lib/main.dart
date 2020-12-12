@@ -39,8 +39,11 @@ class _SweeperPageState extends State<SweeperPage> {
           children: [
             Spacer(flex: 2),
             Flexible(
-              child: BlowField(
-                key: fieldKey,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: BlowField(
+                  key: fieldKey,
+                ),
               ),
               flex: 10,
             ),
