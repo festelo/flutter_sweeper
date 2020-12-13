@@ -74,162 +74,154 @@ class _SettingsPanelState extends State<SettingsPanel>
         border: Border.all(color: Colors.blue, width: 2),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: AnimatedSize(
-        vsync: this,
-        duration: animationsDuration,
-        curve: Curves.easeInOutCubic,
-        child: SizedBox(
-          width: expanded ? 220 : 170,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 35,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: InkWell(
-                        child: Row(
-                          children: [
-                            SizedBox(width: 35),
-                            Expanded(
-                              child: Container(
-                                height: double.infinity,
-                                width: double.infinity,
-                                alignment: Alignment.center,
-                                child: Text(
-                                  'Reset',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .button
-                                      ?.copyWith(color: Colors.blue),
-                                ),
-                              ),
+      width: 200,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            height: 35,
+            child: Row(
+              children: [
+                Expanded(
+                  child: InkWell(
+                    child: Row(
+                      children: [
+                        SizedBox(width: 35),
+                        Expanded(
+                          child: Container(
+                            height: double.infinity,
+                            width: double.infinity,
+                            alignment: Alignment.center,
+                            child: Text(
+                              'Reset',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .button
+                                  ?.copyWith(color: Colors.blue),
                             ),
-                          ],
-                        ),
-                        onTap: () =>
-                            widget.onReset(selectedFieldSize, selectedBombs),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 35,
-                      child: InkWell(
-                        child: Center(
-                          child: Icon(
-                            Icons.settings,
-                            color: Colors.blue,
-                            size: 17,
                           ),
                         ),
-                        onTap: () => setExpanded(!expanded),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              AnimatedSize(
-                vsync: this,
-                duration: Duration(milliseconds: 300),
-                child: SizeTransition(
-                  sizeFactor: _heightTransition,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Bombs count:'),
-                      SizedBox(height: 5),
-                      Container(
-                        height: 35,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (ctx, i) {
-                            final count = bombsOptions[selectedFieldSize]![i];
-                            return Container(
-                              width: 35,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.blueAccent,
-                                  width: 1,
-                                ),
-                                color: selectedBombs == count
-                                    ? Colors.lightBlue
-                                    : null,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              margin: EdgeInsets.all(5),
-                              child: InkWell(
-                                child: Center(
-                                  child: Text(
-                                    count.toString(),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText2
-                                        ?.copyWith(
-                                          color: selectedBombs == count
-                                              ? Colors.white
-                                              : null,
-                                        ),
-                                  ),
-                                ),
-                                onTap: () =>
-                                    setState(() => selectedBombs = count),
-                              ),
-                            );
-                          },
-                          itemCount: bombsOptions[selectedFieldSize]!.length,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text('Field size:'),
-                      SizedBox(height: 5),
-                      Container(
-                        height: 35,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (ctx, i) {
-                            final fieldSize = fieldSizes[i];
-                            return Container(
-                              width: 50,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.blueAccent,
-                                  width: 1,
-                                ),
-                                color: selectedFieldSize == fieldSize
-                                    ? Colors.lightBlue
-                                    : null,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              margin: EdgeInsets.all(5),
-                              child: InkWell(
-                                child: Center(
-                                  child: Text(
-                                    '${fieldSize.width}x${fieldSize.height}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText2
-                                        ?.copyWith(
-                                          color: selectedFieldSize == fieldSize
-                                              ? Colors.white
-                                              : null,
-                                        ),
-                                  ),
-                                ),
-                                onTap: () => setFieldSize(fieldSize),
-                              ),
-                            );
-                          },
-                          itemCount: fieldSizes.length,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                    ],
+                      ],
+                    ),
+                    onTap: () =>
+                        widget.onReset(selectedFieldSize, selectedBombs),
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  width: 35,
+                  child: InkWell(
+                    child: Center(
+                      child: Icon(
+                        Icons.settings,
+                        color: Colors.blue,
+                        size: 17,
+                      ),
+                    ),
+                    onTap: () => setExpanded(!expanded),
+                  ),
+                )
+              ],
+            ),
           ),
-        ),
+          AnimatedSize(
+            vsync: this,
+            duration: Duration(milliseconds: 300),
+            child: SizeTransition(
+              sizeFactor: _heightTransition,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Bombs count:'),
+                  SizedBox(height: 5),
+                  Container(
+                    height: 35,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (ctx, i) {
+                        final count = bombsOptions[selectedFieldSize]![i];
+                        return Container(
+                          width: 35,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.blueAccent,
+                              width: 1,
+                            ),
+                            color: selectedBombs == count
+                                ? Colors.lightBlue
+                                : null,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          margin: EdgeInsets.all(5),
+                          child: InkWell(
+                            child: Center(
+                              child: Text(
+                                count.toString(),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.copyWith(
+                                      color: selectedBombs == count
+                                          ? Colors.white
+                                          : null,
+                                    ),
+                              ),
+                            ),
+                            onTap: () => setState(() => selectedBombs = count),
+                          ),
+                        );
+                      },
+                      itemCount: bombsOptions[selectedFieldSize]!.length,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text('Field size:'),
+                  SizedBox(height: 5),
+                  Container(
+                    height: 35,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (ctx, i) {
+                        final fieldSize = fieldSizes[i];
+                        return Container(
+                          width: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: Colors.blueAccent,
+                              width: 1,
+                            ),
+                            color: selectedFieldSize == fieldSize
+                                ? Colors.lightBlue
+                                : null,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          margin: EdgeInsets.all(5),
+                          child: InkWell(
+                            child: Center(
+                              child: Text(
+                                '${fieldSize.width}x${fieldSize.height}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyText2
+                                    ?.copyWith(
+                                      color: selectedFieldSize == fieldSize
+                                          ? Colors.white
+                                          : null,
+                                    ),
+                              ),
+                            ),
+                            onTap: () => setFieldSize(fieldSize),
+                          ),
+                        );
+                      },
+                      itemCount: fieldSizes.length,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
