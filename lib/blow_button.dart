@@ -61,6 +61,7 @@ class BlowButton extends StatelessWidget {
                 if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
                 return FontAwesomeIcons.question;
               }(),
+              size: 16,
               color: getFontColor(),
             ),
           ),
