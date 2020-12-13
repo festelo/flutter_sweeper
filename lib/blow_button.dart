@@ -50,16 +50,21 @@ class BlowButton extends StatelessWidget {
         ),
         margin: EdgeInsets.all(1),
         child: InkWell(
-          child: Center(
-            child: FaIcon(
-              () {
-                if (state.hasFlag(CellState.bomb) &&
-                    state.hasFlag(CellState.open)) return FontAwesomeIcons.bomb;
-                if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
-                return FontAwesomeIcons.question;
-              }(),
-              size: state.hasFlag(CellState.flag) ? 22 : 18,
-              color: getFontColor(),
+          child: FittedBox(
+            fit: BoxFit.contain,
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: FaIcon(
+                () {
+                  if (state.hasFlag(CellState.bomb) &&
+                      state.hasFlag(CellState.open))
+                    return FontAwesomeIcons.bomb;
+                  if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
+                  return FontAwesomeIcons.question;
+                }(),
+                size: state.hasFlag(CellState.flag) ? 22 : 18,
+                color: getFontColor(),
+              ),
             ),
           ),
           onLongPress: onFlag,

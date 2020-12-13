@@ -44,7 +44,8 @@ class NumberButton extends StatelessWidget {
         ),
         margin: EdgeInsets.all(1),
         child: InkWell(
-          child: Center(
+          child: FittedBox(
+            fit: BoxFit.contain,
             child: Text(
               number.toString(),
               style: Theme.of(context).textTheme.bodyText1?.copyWith(
