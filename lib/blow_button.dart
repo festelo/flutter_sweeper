@@ -17,14 +17,14 @@ class BlowButton extends StatelessWidget {
   static get fillColor => <CellState, Color>{
         CellState.none: Colors.white,
         CellState.bomb: Colors.red,
-        CellState.flag: Colors.grey.shade300,
+        CellState.flag: Colors.grey.shade200,
       };
 
-  static final fontColor = <CellState, Color>{
-    CellState.none: Colors.black54,
-    CellState.bomb: Colors.grey.shade200,
-    CellState.flag: Colors.black54,
-  };
+  static get fontColor => <CellState, Color>{
+        CellState.none: Colors.black54,
+        CellState.bomb: Colors.grey.shade200,
+        CellState.flag: Colors.black,
+      };
 
   Color getFillColor() {
     if (state.hasFlag(CellState.bomb) && state.hasFlag(CellState.open))
@@ -55,7 +55,7 @@ class BlowButton extends StatelessWidget {
               () {
                 if (state.hasFlag(CellState.bomb) &&
                     state.hasFlag(CellState.open)) return FontAwesomeIcons.bomb;
-                if (state.hasFlag(CellState.flag)) return Icons.flag;
+                if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
                 return FontAwesomeIcons.question;
               }(),
               size: state.hasFlag(CellState.flag) ? 22 : 18,

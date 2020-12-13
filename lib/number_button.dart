@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 class NumberButton extends StatelessWidget {
   final int number;
+  final VoidCallback onTap;
 
-  const NumberButton({Key? key, required this.number}) : super(key: key);
+  const NumberButton({
+    Key? key,
+    required this.number,
+    required this.onTap,
+  }) : super(key: key);
 
   static get fillColor => <int, Color>{
         8: Colors.tealAccent,
@@ -49,7 +54,7 @@ class NumberButton extends StatelessWidget {
                   ),
             ),
           ),
-          onTap: () {},
+          onTap: onTap,
         ),
       ),
     );

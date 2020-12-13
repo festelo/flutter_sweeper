@@ -42,7 +42,7 @@ class BlowFieldState extends State<BlowField> {
 
   FieldManager? field;
 
-  void onTap(Location location) {
+  void onOpen(Location location) {
     if (field == null) initBombs(except: location);
     if (gameOver) return;
     final currentState = field!.getState(location);
@@ -78,6 +78,32 @@ class BlowFieldState extends State<BlowField> {
         setState(() {
           gameOver = true;
         });
+      }
+    }
+  }
+
+  void onNumberTap(Location location) {
+    if (gameOver) return;
+    final currentState = field!.getState(location);
+    if (!currentState.hasFlag(CellState.open)) return;
+    final number = field!.getOpened(location);
+    if (number == 0) return;
+    var flagsCounter = 0;
+    for (var i = -1; i < 2; i++) {
+      final x = location.x + i;
+      for (var j = -1; j < 2; j++) {
+        final y = location.y + j;
+        final state = field!.getState(Location(x, y));
+        if (state.hasFlag(CellState.flag)) flagsCounter++;
+      }
+    }
+    if (flagsCounter != number) return;
+    for (var i = -1; i < 2; i++) {
+      final x = location.x + i;
+      for (var j = -1; j < 2; j++) {
+        final y = location.y + j;
+        final state = field!.getState(Location(x, y));
+        if (!state.hasFlag(CellState.flag)) onOpen(Location(x, y));
       }
     }
   }
@@ -160,10 +186,12 @@ class BlowFieldState extends State<BlowField> {
                         if (state.hasFlag(CellState.open) &&
                             !state.hasFlag(CellState.bomb))
                           return NumberButton(
-                              number: field!.getOpened(location));
+                            number: field!.getOpened(location),
+                            onTap: () => onNumberTap(location),
+                          );
                         return BlowButton(
                           state: state,
-                          onTap: () => onTap(location),
+                          onTap: () => onOpen(location),
                           onFlag: () => onFlag(location),
                         );
                       }(),

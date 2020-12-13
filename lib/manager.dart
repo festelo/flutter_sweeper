@@ -99,6 +99,7 @@ class FieldManager {
 
   bool open(Location location) {
     final currentState = getState(location);
+    if (currentState.hasFlag(CellState.open)) return true;
     if (currentState.hasFlag(CellState.bomb)) {
       _openBomb(location);
       return false;
