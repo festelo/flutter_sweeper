@@ -77,7 +77,7 @@ class FieldManager {
   void _openOk(Location location) {
     final currentState = getState(location);
     if (currentState.hasFlag(CellState.open)) return;
-    _states[location] = currentState | CellState.open;
+    _states[location] = (currentState | CellState.open) & ~CellState.flag;
     var counter = 0;
     for (var i = -1; i < 2; i++) {
       final x = location.x + i;
@@ -108,8 +108,7 @@ class FieldManager {
         final location = Location(j, i);
         final state = getState(location);
         if (state.hasFlag(CellState.bomb))
-          _states[location] =
-              getState(location) | CellState.open & ~CellState.flag;
+          _states[location] = getState(location) | CellState.open;
       }
   }
 
