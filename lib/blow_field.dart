@@ -39,10 +39,21 @@ class BlowFieldState extends State<BlowField> {
   int get rows => widget.fieldWidth;
   int get columns => widget.fieldHeight;
   int get bombsCount => widget.bombsCount;
-  int flagsSet = 0;
   bool gameOver = false;
 
   FieldManager? field;
+
+  void checkFlags() {
+    if (bombsCount == field!.flagsCount) {
+      final flagsCorrect = field!.checkFlags();
+      if (flagsCorrect) {
+        widget.onWin();
+        setState(() {
+          gameOver = true;
+        });
+      }
+    }
+  }
 
   void onOpen(Location location) {
     if (field == null) initBombs(except: location);
@@ -55,6 +66,7 @@ class BlowFieldState extends State<BlowField> {
       gameOver = true;
     }
     setState(() {});
+    checkFlags();
   }
 
   void onFlag(Location location) {
@@ -64,24 +76,14 @@ class BlowFieldState extends State<BlowField> {
     if (currentState.hasFlag(CellState.flag)) {
       setState(() {
         field!.unflag(location);
-        flagsSet--;
       });
     } else {
       setState(() {
         field!.flag(location);
-        flagsSet++;
       });
     }
-    widget.onBombsCountUpdated(bombsCount - flagsSet, bombsCount);
-    if (bombsCount == flagsSet) {
-      final flagsCorrect = field!.checkFlags();
-      if (flagsCorrect) {
-        widget.onWin();
-        setState(() {
-          gameOver = true;
-        });
-      }
-    }
+    widget.onBombsCountUpdated(bombsCount - field!.flagsCount, bombsCount);
+    checkFlags();
   }
 
   void onNumberTap(Location location) {
@@ -112,7 +114,6 @@ class BlowFieldState extends State<BlowField> {
 
   void reset() {
     setState(() {
-      flagsSet = 0;
       field = null;
       gameOver = false;
     });

@@ -53,6 +53,10 @@ class FieldManager {
   final int fieldHeight;
   final Map<Location, int> _opened = {};
 
+  int get flagsCount {
+    return _states.values.where((e) => e.hasFlag(CellState.flag)).length;
+  }
+
   FieldManager(this._states, this.fieldWidth, this.fieldHeight);
 
   bool inside(Location location) {
@@ -104,7 +108,8 @@ class FieldManager {
         final location = Location(j, i);
         final state = getState(location);
         if (state.hasFlag(CellState.bomb))
-          _states[location] = getState(location) | CellState.open;
+          _states[location] =
+              getState(location) | CellState.open & ~CellState.flag;
       }
   }
 
