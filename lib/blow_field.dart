@@ -10,6 +10,7 @@ import 'manager.dart';
 class BlowField extends StatefulWidget {
   final int fieldWidth;
   final int fieldHeight;
+  final int bombsCount;
   final void Function(int left, int all) onBombsCountUpdated;
   final void Function() onWin;
   final void Function() onLoose;
@@ -21,6 +22,7 @@ class BlowField extends StatefulWidget {
     required this.onBombsCountUpdated,
     required this.onWin,
     required this.onLoose,
+    required this.bombsCount,
   }) : super(key: key);
 
   static BlowFieldState of(BuildContext context, {bool nullOk = false}) {
@@ -36,8 +38,8 @@ class BlowField extends StatefulWidget {
 class BlowFieldState extends State<BlowField> {
   int get rows => widget.fieldWidth;
   int get columns => widget.fieldHeight;
+  int get bombsCount => widget.bombsCount;
   int flagsSet = 0;
-  int bombsCount = 20;
   bool gameOver = false;
 
   FieldManager? field;
@@ -110,6 +112,7 @@ class BlowFieldState extends State<BlowField> {
 
   void reset() {
     setState(() {
+      flagsSet = 0;
       field = null;
       gameOver = false;
     });

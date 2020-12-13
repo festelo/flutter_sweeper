@@ -10,6 +10,17 @@ class Location {
   int get hashCode => hash2(x.hashCode, y.hashCode);
 }
 
+class FieldSize {
+  final int width;
+  final int height;
+
+  const FieldSize(this.width, this.height);
+
+  bool operator ==(o) =>
+      o is FieldSize && width == o.width && height == o.height;
+  int get hashCode => hash2(width.hashCode, height.hashCode);
+}
+
 class CellState {
   static const CellState none = CellState(0);
   static const CellState bomb = CellState(1);

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minesweeper/blow_field.dart';
+import 'package:minesweeper/manager.dart';
+import 'package:minesweeper/settings_panel.dart';
 
 void main() {
   runApp(SweeperApp());
@@ -28,8 +30,18 @@ class SweeperPage extends StatefulWidget {
 class _SweeperPageState extends State<SweeperPage> {
   final GlobalKey<BlowFieldState> fieldKey = GlobalKey();
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  FieldSize fieldSize = SettingsPanel.defaultFieldSize;
+  int bombsCount = SettingsPanel.defaultBombs;
   int? allBombs;
   int? leftBombs;
+
+  void onReset(FieldSize fieldSize, int bombsCount) {
+    setState(() {
+      this.fieldSize = fieldSize;
+      this.bombsCount = bombsCount;
+    });
+    fieldKey.currentState?.reset();
+  }
 
   void showEndDialog({required bool win}) {
     showDialog(
@@ -90,6 +102,9 @@ class _SweeperPageState extends State<SweeperPage> {
                   aspectRatio: 1,
                   child: BlowField(
                     key: fieldKey,
+                    fieldHeight: fieldSize.height,
+                    fieldWidth: fieldSize.width,
+                    bombsCount: bombsCount,
                     onLoose: () => showEndDialog(win: false),
                     onWin: () => showEndDialog(win: true),
                     onBombsCountUpdated: (left, all) => setState(() {
@@ -101,31 +116,9 @@ class _SweeperPageState extends State<SweeperPage> {
               ),
               flex: 10,
             ),
-            Expanded(
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  width: 150,
-                  height: 30,
-                  child: InkWell(
-                    child: Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Reset',
-                        style: Theme.of(context)
-                            .textTheme
-                            .button
-                            ?.copyWith(color: Colors.blue),
-                      ),
-                    ),
-                    onTap: () => fieldKey.currentState?.reset(),
-                  ),
-                ),
+            Center(
+              child: SettingsPanel(
+                onReset: onReset,
               ),
             ),
             Spacer(flex: 1),
