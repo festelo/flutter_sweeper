@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -9,11 +10,13 @@ import 'manager.dart';
 class BlowField extends StatefulWidget {
   final int fieldWidth;
   final int fieldHeight;
+  final void Function(int left, int all) onBombsCountUpdated;
 
   BlowField({
     Key? key,
     this.fieldHeight = 10,
     this.fieldWidth = 10,
+    required this.onBombsCountUpdated,
   }) : super(key: key);
 
   static BlowFieldState of(BuildContext context, {bool nullOk = false}) {
@@ -29,6 +32,8 @@ class BlowField extends StatefulWidget {
 class BlowFieldState extends State<BlowField> {
   int get rows => widget.fieldWidth;
   int get columns => widget.fieldHeight;
+  int flagsSet = 0;
+  int bombsCount = 20;
 
   FieldManager? field;
 
@@ -48,24 +53,32 @@ class BlowFieldState extends State<BlowField> {
     if (currentState.hasFlag(CellState.flag)) {
       setState(() {
         field!.unflag(location);
+        flagsSet--;
       });
     } else {
       setState(() {
         field!.flag(location);
+        flagsSet++;
       });
     }
+    widget.onBombsCountUpdated(bombsCount - flagsSet, bombsCount);
   }
 
   void reset() {
     setState(() => field = null);
   }
 
-  List<Location> generateBombs() {
+  List<Location> generateBombs(int bombsCount, Set<Location> except) {
     final bombs = <Location>[];
     final random = Random();
-    for (var i = 0; i < widget.fieldHeight; i++) {
-      for (var j = 0; j < widget.fieldWidth; j++) {
-        if (random.nextInt(100) < 30) bombs.add(Location(j, i));
+    for (var i = 0; i < bombsCount; i++) {
+      while (true) {
+        var x = random.nextInt(widget.fieldWidth);
+        var y = random.nextInt(widget.fieldHeight);
+        final location = Location(x, y);
+        if (bombs.contains(location) || except.contains(location)) continue;
+        bombs.add(location);
+        break;
       }
     }
     return bombs;
@@ -73,16 +86,17 @@ class BlowFieldState extends State<BlowField> {
 
   void initBombs({Location? except}) {
     Map<Location, CellState> fieldStates = {};
-    final bombs = generateBombs();
+    final exceptSet = <Location>{};
     if (except != null) {
       for (var i = -1; i < 2; i++) {
         final x = except.x + i;
         for (var j = -1; j < 2; j++) {
           final y = except.y + j;
-          bombs.remove(Location(x, y));
+          exceptSet.add(Location(x, y));
         }
       }
     }
+    final bombs = generateBombs(bombsCount, exceptSet);
     for (final b in bombs) {
       fieldStates[b] = CellState.bomb;
     }
@@ -91,6 +105,7 @@ class BlowFieldState extends State<BlowField> {
       widget.fieldWidth,
       widget.fieldHeight,
     );
+    widget.onBombsCountUpdated(bombsCount, bombsCount);
   }
 
   @override

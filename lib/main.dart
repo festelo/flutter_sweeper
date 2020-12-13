@@ -27,6 +27,8 @@ class SweeperPage extends StatefulWidget {
 
 class _SweeperPageState extends State<SweeperPage> {
   final GlobalKey<BlowFieldState> fieldKey = GlobalKey();
+  int? allBombs;
+  int? leftBombs;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +39,45 @@ class _SweeperPageState extends State<SweeperPage> {
       body: Center(
         child: Column(
           children: [
-            Spacer(flex: 2),
-            Flexible(
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: BlowField(
-                  key: fieldKey,
+            Spacer(flex: 1),
+            Expanded(
+              child: Center(
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.blue, width: 1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  width: 150,
+                  height: 30,
+                  child: InkWell(
+                    child: Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Bombs left: $leftBombs / $allBombs',
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            ?.copyWith(color: Colors.blue),
+                      ),
+                    ),
+                    onTap: () => fieldKey.currentState?.reset(),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: BlowField(
+                    key: fieldKey,
+                    onBombsCountUpdated: (left, all) => setState(() {
+                      allBombs = all;
+                      leftBombs = left;
+                    }),
+                  ),
                 ),
               ),
               flex: 10,
