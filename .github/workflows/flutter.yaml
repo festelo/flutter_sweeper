@@ -47,10 +47,9 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "dev"
-      - name: Setup Ninja
-        uses: ashutoshvarma/setup-ninja@master
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
+      - uses: seanmiddleditch/gha-setup-ninja@master
       - run: flutter build linux --enable-experiment=non-nullable --no-sound-null-safety
       - name: Upload build artifact
         uses: actions/upload-artifact@v1
