@@ -11,12 +11,16 @@ class BlowField extends StatefulWidget {
   final int fieldWidth;
   final int fieldHeight;
   final void Function(int left, int all) onBombsCountUpdated;
+  final void Function() onWin;
+  final void Function() onLoose;
 
   BlowField({
     Key? key,
     this.fieldHeight = 10,
     this.fieldWidth = 10,
     required this.onBombsCountUpdated,
+    required this.onWin,
+    required this.onLoose,
   }) : super(key: key);
 
   static BlowFieldState of(BuildContext context, {bool nullOk = false}) {
@@ -34,16 +38,21 @@ class BlowFieldState extends State<BlowField> {
   int get columns => widget.fieldHeight;
   int flagsSet = 0;
   int bombsCount = 20;
+  bool gameOver = false;
 
   FieldManager? field;
 
   void onTap(Location location) {
     if (field == null) initBombs(except: location);
+    if (gameOver) return;
     final currentState = field!.getState(location);
     if (currentState.hasFlag(CellState.open)) return;
-    setState(() {
-      field!.open(location);
-    });
+    var res = field!.open(location);
+    if (!res) {
+      widget.onLoose();
+      gameOver = true;
+    }
+    setState(() {});
   }
 
   void onFlag(Location location) {
@@ -62,10 +71,22 @@ class BlowFieldState extends State<BlowField> {
       });
     }
     widget.onBombsCountUpdated(bombsCount - flagsSet, bombsCount);
+    if (bombsCount == flagsSet) {
+      final flagsCorrect = field!.checkFlags();
+      if (flagsCorrect) {
+        widget.onWin();
+        setState(() {
+          gameOver = true;
+        });
+      }
+    }
   }
 
   void reset() {
-    setState(() => field = null);
+    setState(() {
+      field = null;
+      gameOver = false;
+    });
   }
 
   List<Location> generateBombs(int bombsCount, Set<Location> except) {

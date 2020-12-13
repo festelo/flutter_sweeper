@@ -117,4 +117,11 @@ class FieldManager {
     final currentState = getState(location);
     _states[location] = currentState & ~CellState.flag;
   }
+
+  bool checkFlags() {
+    for (final s in _states.values) {
+      if (s.hasFlag(CellState.bomb) && !s.hasFlag(CellState.flag)) return false;
+    }
+    return true;
+  }
 }

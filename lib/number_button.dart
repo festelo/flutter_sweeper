@@ -13,8 +13,8 @@ class NumberButton extends StatelessWidget {
         4: Colors.orange.shade300,
         3: Colors.yellow,
         2: Colors.green.shade300,
-        1: Colors.grey.shade200,
-        0: Colors.grey.shade100,
+        1: Colors.grey.shade300,
+        0: Colors.grey.shade200,
       };
 
   static const fontColor = <int, Color>{

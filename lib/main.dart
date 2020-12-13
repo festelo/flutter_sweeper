@@ -27,12 +27,30 @@ class SweeperPage extends StatefulWidget {
 
 class _SweeperPageState extends State<SweeperPage> {
   final GlobalKey<BlowFieldState> fieldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
   int? allBombs;
   int? leftBombs;
+
+  void showEndDialog({required bool win}) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('You ${win ? 'won' : 'lost'}'),
+        content: Text('Press "Reset" button to restart'),
+        actions: [
+          TextButton(
+            child: Text('OK'),
+            onPressed: () => Navigator.of(context).pop(),
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -42,29 +60,28 @@ class _SweeperPageState extends State<SweeperPage> {
             Spacer(flex: 1),
             Expanded(
               child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue, width: 1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  width: 150,
-                  height: 30,
-                  child: InkWell(
-                    child: Container(
-                      height: double.infinity,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Bombs left: $leftBombs / $allBombs',
-                        style: Theme.of(context)
-                            .textTheme
-                            .button
-                            ?.copyWith(color: Colors.blue),
+                child: allBombs == null
+                    ? Container()
+                    : Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.blue, width: 1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        width: 150,
+                        height: 30,
+                        child: Container(
+                          height: double.infinity,
+                          width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Bombs left: $leftBombs / $allBombs',
+                            style: Theme.of(context)
+                                .textTheme
+                                .button
+                                ?.copyWith(color: Colors.blue),
+                          ),
+                        ),
                       ),
-                    ),
-                    onTap: () => fieldKey.currentState?.reset(),
-                  ),
-                ),
               ),
             ),
             Expanded(
@@ -73,6 +90,8 @@ class _SweeperPageState extends State<SweeperPage> {
                   aspectRatio: 1,
                   child: BlowField(
                     key: fieldKey,
+                    onLoose: () => showEndDialog(win: false),
+                    onWin: () => showEndDialog(win: true),
                     onBombsCountUpdated: (left, all) => setState(() {
                       allBombs = all;
                       leftBombs = left;
