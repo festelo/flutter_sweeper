@@ -101,34 +101,41 @@ class BlowFieldState extends State<BlowField> {
           color: Colors.blue,
           width: 3,
         ),
+        color: Colors.blue,
         borderRadius: BorderRadius.circular(15),
       ),
       clipBehavior: Clip.antiAlias,
       margin: EdgeInsets.all(20),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (var i = 0; i < columns; i++)
-            Row(
-              children: [
-                for (var j = 0; j < rows; j++)
-                  Expanded(
-                    child: () {
-                      final location = Location(i, j);
-                      final state = field?.getState(location) ?? CellState.none;
-                      if (state.hasFlag(CellState.open) &&
-                          !state.hasFlag(CellState.bomb))
-                        return NumberButton(number: field!.getOpened(location));
-                      return BlowButton(
-                        state: state,
-                        onTap: () => onTap(location),
-                        onFlag: () => onFlag(location),
-                      );
-                    }(),
-                  ),
-              ],
-            ),
-        ],
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (var i = 0; i < columns; i++)
+              Row(
+                children: [
+                  for (var j = 0; j < rows; j++)
+                    Expanded(
+                      child: () {
+                        final location = Location(i, j);
+                        final state =
+                            field?.getState(location) ?? CellState.none;
+                        if (state.hasFlag(CellState.open) &&
+                            !state.hasFlag(CellState.bomb))
+                          return NumberButton(
+                              number: field!.getOpened(location));
+                        return BlowButton(
+                          state: state,
+                          onTap: () => onTap(location),
+                          onFlag: () => onFlag(location),
+                        );
+                      }(),
+                    ),
+                ],
+              ),
+          ],
+        ),
       ),
     );
   }

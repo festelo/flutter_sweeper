@@ -35,12 +35,9 @@ class NumberButton extends StatelessWidget {
       aspectRatio: 1,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.blue,
-            width: 1,
-          ),
           color: fillColor[number] ?? Colors.black,
         ),
+        margin: EdgeInsets.all(1),
         child: InkWell(
           child: Center(
             child: Text(

@@ -14,11 +14,11 @@ class BlowButton extends StatelessWidget {
     required this.onFlag,
   }) : super(key: key);
 
-  static final fillColor = <CellState, Color>{
-    CellState.none: Colors.transparent,
-    CellState.bomb: Colors.red,
-    CellState.flag: Colors.transparent,
-  };
+  static get fillColor => <CellState, Color>{
+        CellState.none: Colors.white,
+        CellState.bomb: Colors.red,
+        CellState.flag: Colors.white,
+      };
 
   static final fontColor = <CellState, Color>{
     CellState.none: Colors.black54,
@@ -46,12 +46,9 @@ class BlowButton extends StatelessWidget {
       aspectRatio: 1,
       child: Container(
         decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.blue,
-            width: 1,
-          ),
           color: getFillColor(),
         ),
+        margin: EdgeInsets.all(1),
         child: InkWell(
           child: Center(
             child: FaIcon(
@@ -61,7 +58,7 @@ class BlowButton extends StatelessWidget {
                 if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
                 return FontAwesomeIcons.question;
               }(),
-              size: 16,
+              size: 18,
               color: getFontColor(),
             ),
           ),
