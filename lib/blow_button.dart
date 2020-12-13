@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'manager.dart';
 
@@ -67,7 +68,10 @@ class BlowButton extends StatelessWidget {
               ),
             ),
           ),
-          onLongPress: onFlag,
+          onLongPress: () {
+            HapticFeedback.vibrate();
+            onFlag();
+          },
           onTap: onTap,
         ),
       ),
