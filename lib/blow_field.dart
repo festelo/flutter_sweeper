@@ -1,8 +1,6 @@
-import 'dart:collection';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:minesweeper/blow_button.dart';
 import 'package:minesweeper/number_button.dart';
 
@@ -63,7 +61,6 @@ class BlowFieldState extends State<BlowField> {
     if (currentState.hasFlag(CellState.open)) return;
     var res = field!.open(location);
     if (!res) {
-      HapticFeedback.vibrate();
       widget.onLoose();
       gameOver = true;
     }

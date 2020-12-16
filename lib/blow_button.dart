@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:vibration/vibration.dart';
 import 'manager.dart';
 
-class BlowButton extends StatelessWidget {
+class BlowButton extends StatefulWidget {
   final CellState state;
   final VoidCallback onTap;
   final VoidCallback onFlag;
@@ -27,18 +29,30 @@ class BlowButton extends StatelessWidget {
         CellState.flag: Colors.black,
       };
 
+  @override
+  _BlowButtonState createState() => _BlowButtonState();
+}
+
+class _BlowButtonState extends State<BlowButton> {
+  Timer? longPressTimer;
+  static const longPressDuration = Duration(milliseconds: 200);
+
   Color getFillColor() {
-    if (state.hasFlag(CellState.bomb) && state.hasFlag(CellState.open))
-      return fillColor[CellState.bomb]!;
-    if (state.hasFlag(CellState.flag)) return fillColor[CellState.flag]!;
-    return fillColor[CellState.none]!;
+    if (widget.state.hasFlag(CellState.bomb) &&
+        widget.state.hasFlag(CellState.open))
+      return BlowButton.fillColor[CellState.bomb]!;
+    if (widget.state.hasFlag(CellState.flag))
+      return BlowButton.fillColor[CellState.flag]!;
+    return BlowButton.fillColor[CellState.none]!;
   }
 
   Color getFontColor() {
-    if (state.hasFlag(CellState.bomb) && state.hasFlag(CellState.open))
-      return fontColor[CellState.bomb]!;
-    if (state.hasFlag(CellState.flag)) return fontColor[CellState.flag]!;
-    return fontColor[CellState.none]!;
+    if (widget.state.hasFlag(CellState.bomb) &&
+        widget.state.hasFlag(CellState.open))
+      return BlowButton.fontColor[CellState.bomb]!;
+    if (widget.state.hasFlag(CellState.flag))
+      return BlowButton.fontColor[CellState.flag]!;
+    return BlowButton.fontColor[CellState.none]!;
   }
 
   @override
@@ -50,29 +64,43 @@ class BlowButton extends StatelessWidget {
           color: getFillColor(),
         ),
         margin: EdgeInsets.all(1),
-        child: InkWell(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           child: FittedBox(
             fit: BoxFit.contain,
             child: Padding(
               padding: const EdgeInsets.all(5),
               child: FaIcon(
                 () {
-                  if (state.hasFlag(CellState.bomb) &&
-                      state.hasFlag(CellState.open))
+                  if (widget.state.hasFlag(CellState.bomb) &&
+                      widget.state.hasFlag(CellState.open))
                     return FontAwesomeIcons.bomb;
-                  if (state.hasFlag(CellState.flag)) return Icons.flag_outlined;
+                  if (widget.state.hasFlag(CellState.flag))
+                    return Icons.flag_outlined;
                   return FontAwesomeIcons.question;
                 }(),
-                size: state.hasFlag(CellState.flag) ? 22 : 18,
+                size: widget.state.hasFlag(CellState.flag) ? 22 : 18,
                 color: getFontColor(),
               ),
             ),
           ),
-          onLongPress: () {
-            HapticFeedback.vibrate();
-            onFlag();
+          onTapDown: (_) {
+            longPressTimer?.cancel();
+            longPressTimer = Timer(longPressDuration, () {
+              Vibration.vibrate(duration: 50, amplitude: 1);
+              widget.onFlag();
+            });
           },
-          onTap: onTap,
+          onTapCancel: () {
+            longPressTimer?.cancel();
+          },
+          onTapUp: (_) {
+            final wasActive = longPressTimer?.isActive ?? false;
+            longPressTimer?.cancel();
+            if (wasActive) {
+              widget.onTap();
+            }
+          },
         ),
       ),
     );
