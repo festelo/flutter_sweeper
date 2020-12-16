@@ -1,4 +1,4 @@
-# Tawer's Minesweeper
+# Tawer's Sweeper
 
 ![Image of Yaktocat](https://i.imgur.com/kRoMoxI.png)
 
