@@ -1,16 +1,23 @@
-# minesweeper
+# Tawer's Minesweeper
 
-A new Flutter project.
+![Image of Yaktocat](https://i.imgur.com/kRoMoxI.png)
 
-## Getting Started
+Minesweeper project written on Flutter.  
 
-This project is a starting point for a Flutter application.
+Supported platforms: 
+* Desktop (macOS, Windows, Linux)
+* Mobile (Android, iOS)
+* Web
 
-A few resources to get you started if this is your first Flutter project:
+## Where to play
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+You can find last binaries on [github actions page](https://github.com/festelo/flutter_sweeper/actions). They are compiled directly from master branch on every commit using Github CI/CD. *Artifacts for iOS and Web are not provided.*
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## How to build
+
+Clone the project through `git clone https://github.com/festelo/flutter_sweeper` and run `flutter build ...` or `flutter run`
+
+## 3rd party dependencies
+
+* [Vibration package](https://pub.dev/packages/vibration) (BSD) for vibration
+* [Font Awesome](https://pub.dev/packages/font_awesome_flutter) (MIT) for bomb and question icons
