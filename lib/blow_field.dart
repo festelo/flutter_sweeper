@@ -59,6 +59,7 @@ class BlowFieldState extends State<BlowField> {
     if (gameOver) return;
     final currentState = field!.getState(location);
     if (currentState.hasFlag(CellState.open)) return;
+    if (currentState.hasFlag(CellState.flag)) return;
     var res = field!.open(location);
     if (!res) {
       widget.onLoose();
@@ -70,6 +71,7 @@ class BlowFieldState extends State<BlowField> {
 
   void onFlag(Location location) {
     if (field == null) initBombs(except: location);
+    if (gameOver) return;
     final currentState = field!.getState(location);
     if (currentState.hasFlag(CellState.open)) return;
     if (currentState.hasFlag(CellState.flag)) {
