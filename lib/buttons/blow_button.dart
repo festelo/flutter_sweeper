@@ -84,6 +84,7 @@ class _BlowButtonState extends State<BlowButton> {
               ),
             ),
           ),
+          onSecondaryTap: widget.onFlag,
           onTapDown: (_) {
             longPressTimer?.cancel();
             longPressTimer = Timer(longPressDuration, () async {
