@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:vibration/vibration.dart';
-import 'manager.dart';
+import '../services/field_manager.dart';
 
 class BlowButton extends StatefulWidget {
   final CellState state;
@@ -86,8 +86,13 @@ class _BlowButtonState extends State<BlowButton> {
           ),
           onTapDown: (_) {
             longPressTimer?.cancel();
-            longPressTimer = Timer(longPressDuration, () {
-              Vibration.vibrate(duration: 50, amplitude: 1);
+            longPressTimer = Timer(longPressDuration, () async {
+              try {
+                final v = await Vibration.hasVibrator();
+                if (v ?? false) {
+                  Vibration.vibrate(duration: 50, amplitude: 1);
+                }
+              } catch (_) {}
               widget.onFlag();
             });
           },

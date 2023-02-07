@@ -51,6 +51,7 @@ class FieldManager {
   Map<Location, CellState> _states;
   final int fieldWidth;
   final int fieldHeight;
+  FieldSize get fieldSize => FieldSize(fieldWidth, fieldHeight);
   final Map<Location, int> _opened = {};
 
   int get flagsCount {

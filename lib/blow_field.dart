@@ -1,18 +1,21 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:minesweeper/blow_button.dart';
-import 'package:minesweeper/number_button.dart';
+import 'package:minesweeper/buttons/blow_button.dart';
+import 'package:minesweeper/buttons/number_button.dart';
 
-import 'manager.dart';
+import 'services/field_manager.dart';
 
 class BlowField extends StatefulWidget {
   final int fieldWidth;
   final int fieldHeight;
   final int bombsCount;
+
+  final void Function(int bombsCount)? onStart;
   final void Function(int left, int all) onBombsCountUpdated;
   final void Function() onWin;
   final void Function() onLoose;
+  final EdgeInsets margin;
 
   BlowField({
     Key? key,
@@ -22,6 +25,8 @@ class BlowField extends StatefulWidget {
     required this.onWin,
     required this.onLoose,
     required this.bombsCount,
+    this.margin = const EdgeInsets.all(20),
+    this.onStart,
   }) : super(key: key);
 
   static BlowFieldState of(BuildContext context, {bool nullOk = false}) {
@@ -35,12 +40,27 @@ class BlowField extends StatefulWidget {
 }
 
 class BlowFieldState extends State<BlowField> {
-  int get rows => widget.fieldWidth;
-  int get columns => widget.fieldHeight;
-  int get bombsCount => widget.bombsCount;
+  late int rows;
+  late int columns;
+  late int bombsCount;
   bool gameOver = false;
 
   FieldManager? field;
+
+  void initState() {
+    super.initState();
+    reset();
+  }
+
+  void reset() {
+    setState(() {
+      field = null;
+      gameOver = false;
+      rows = widget.fieldWidth;
+      columns = widget.fieldHeight;
+      bombsCount = widget.bombsCount;
+    });
+  }
 
   void checkFlags() {
     if (bombsCount == field!.flagsCount) {
@@ -113,13 +133,6 @@ class BlowFieldState extends State<BlowField> {
     }
   }
 
-  void reset() {
-    setState(() {
-      field = null;
-      gameOver = false;
-    });
-  }
-
   List<Location> generateBombs(int bombsCount, Set<Location> except) {
     final bombs = <Location>[];
     final random = Random();
@@ -157,7 +170,7 @@ class BlowFieldState extends State<BlowField> {
       widget.fieldWidth,
       widget.fieldHeight,
     );
-    widget.onBombsCountUpdated(bombsCount, bombsCount);
+    if (widget.onStart != null) widget.onStart!(bombsCount);
   }
 
   @override
@@ -172,7 +185,7 @@ class BlowFieldState extends State<BlowField> {
         borderRadius: BorderRadius.circular(15),
       ),
       clipBehavior: Clip.antiAlias,
-      margin: EdgeInsets.all(20),
+      margin: widget.margin,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(15),
         clipBehavior: Clip.antiAlias,
@@ -185,7 +198,7 @@ class BlowFieldState extends State<BlowField> {
                   for (var j = 0; j < rows; j++)
                     Expanded(
                       child: () {
-                        final location = Location(i, j);
+                        final location = Location(j, i);
                         final state =
                             field?.getState(location) ?? CellState.none;
                         if (state.hasFlag(CellState.open) &&
