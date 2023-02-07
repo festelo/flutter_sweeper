@@ -67,7 +67,10 @@ class _SweeperPageState extends State<SweeperPage> {
     final field = fieldKey.currentState?.field;
     if (field == null) return;
     GameSolverService(field).makeTurn();
-    setState(() {});
+    fieldKey.currentState?.checkFlags();
+    setState(() {
+      leftBombs = bombsCount - field.flagsCount;
+    });
   }
 
   void onStart(int bombsCount) {

@@ -1,5 +1,6 @@
-import 'package:minesweeper/services/field_manager.dart';
 import 'package:rxdart/rxdart.dart';
+
+import 'package:minesweeper/services/field_manager.dart';
 
 class StatisticService {
   final BehaviorSubject<Map<FieldSize, int>> winsCount;
@@ -10,7 +11,7 @@ class StatisticService {
     required Map<FieldSize, int> winsCount,
     required Map<FieldSize, int> loosesCount,
     required Map<FieldSize, int> gamesCount,
-  })   : winsCount = BehaviorSubject.seeded(winsCount),
+  })  : winsCount = BehaviorSubject.seeded(winsCount),
         loosesCount = BehaviorSubject.seeded(loosesCount),
         gamesCount = BehaviorSubject.seeded(gamesCount);
 
